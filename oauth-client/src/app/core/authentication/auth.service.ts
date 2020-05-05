@@ -17,7 +17,7 @@ export class AuthService extends BaseService  {
   // Observable navItem stream
   authNavStatus$ = this._authNavStatusSource.asObservable();
 
-  private manager = new UserManager(getClientSettings());
+  private manager = new UserManager(getClientSettings(this.configService));
   private user: User | null;
 
   constructor(private http: HttpClient, private configService: ConfigService) { 
@@ -59,9 +59,9 @@ export class AuthService extends BaseService  {
   }
 }
 
-export function getClientSettings(): UserManagerSettings {
+export function getClientSettings(configService: ConfigService): UserManagerSettings {
   return {
-      authority: 'http://localhost:5000',
+      authority: configService.authBaseURI,
       client_id: 'angular_spa',
       redirect_uri: 'http://localhost:4200/auth-callback',
       post_logout_redirect_uri: 'http://localhost:4200/',

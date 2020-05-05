@@ -5,8 +5,12 @@ export class ConfigService {
 
     constructor() {}
 
+    get authBaseURI() {
+        return 'https://localhost:44330';
+    }    
+     
     get authApiURI() {
-        return 'https://localhost:44330/api';
+        return `${this.authBaseURI}/api`;
     }    
      
     get resourceApiURI() {
