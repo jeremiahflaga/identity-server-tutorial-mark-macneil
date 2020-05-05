@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -26,8 +27,6 @@ namespace AuthServer
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllersWithViews();
-
             services.AddDbContext<AppIdentityDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("Default")));
 
             services.AddIdentity<AppUser, IdentityRole>()
@@ -47,6 +46,15 @@ namespace AuthServer
                .AddInMemoryApiResources(Config.GetApiResources())
                .AddInMemoryClients(Config.GetClients())
                .AddAspNetIdentity<AppUser>();
+
+            services.AddCors(options => options.AddPolicy("AllowAll", p => p.AllowAnyOrigin()
+               .AllowAnyMethod()
+               .AllowAnyHeader()));
+
+            services.AddMvc(options =>
+            {
+                options.EnableEndpointRouting = false;
+            }).SetCompatibilityVersion(CompatibilityVersion.Latest);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -64,19 +72,18 @@ namespace AuthServer
             }
             app.UseHttpsRedirection();
             app.UseStaticFiles();
-
             app.UseRouting();
-
             app.UseAuthorization();
 
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapControllerRoute(
-                    name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
-            });
-
+            app.UseCors("AllowAll");
             app.UseIdentityServer();
+
+            app.UseMvc(routes =>
+            {
+                routes.MapRoute(
+                    name: "default",
+                    template: "{controller=Home}/{action=Index}/{id?}");
+            });
         }
     }
 }
