@@ -217,6 +217,14 @@ namespace AuthServer.Controllers
             return vm;
         }
 
+        [HttpGet]
+        public async Task<IActionResult> Logout(string logoutId)
+        {
+            await signInManager.SignOutAsync();
+            var context = await interactionService.GetLogoutContextAsync(logoutId);
+            return Redirect(context.PostLogoutRedirectUri);
+        }
+
         [HttpPost]
         [Route("api/[controller]")]
         public async Task<IActionResult> Register([FromBody]RegisterRequestViewModel model)
