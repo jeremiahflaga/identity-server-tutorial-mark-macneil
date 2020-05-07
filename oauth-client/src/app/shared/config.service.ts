@@ -6,7 +6,7 @@ export class ConfigService {
     constructor() {}
 
     get authBaseURI() {
-        return 'https://localhost:44330';
+        return 'http://localhost:64082';
     }    
      
     get authApiURI() {
@@ -14,6 +14,6 @@ export class ConfigService {
     }    
      
     get resourceApiURI() {
-        return 'http://localhost:5050/api';
+        return 'http://localhost:49252/api';
     }  
 }
