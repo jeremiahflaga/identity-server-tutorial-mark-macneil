@@ -13,6 +13,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.AspNetCore.Identity;
+using IdentityServer4.Services;
 
 namespace AuthServer
 {
@@ -48,6 +49,8 @@ namespace AuthServer
                .AddInMemoryClients(Config.GetClients())
                .AddAspNetIdentity<AppUser>();
 
+            services.AddTransient<IProfileService, IdentityClaimsProfileService>();
+
             services.AddCors(options => options.AddPolicy("AllowAll", p => p.AllowAnyOrigin()
                .AllowAnyMethod()
                .AllowAnyHeader()));
@@ -74,8 +77,8 @@ namespace AuthServer
 
             //app.UseHttpsRedirection();
             app.UseStaticFiles();
-            app.UseRouting();
-            app.UseAuthorization();
+            //app.UseRouting();
+            //app.UseAuthorization();
 
             app.UseCors("AllowAll");
             app.UseIdentityServer();

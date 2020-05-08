@@ -13,7 +13,7 @@ namespace Resource.Api.Controllers
     public class ValuesController : ControllerBase
     {
         // GET api/values
-        //[Authorize(Policy = "Consumer")]
+        [Authorize(Policy = "Consumer")]
         [HttpGet]
         public ActionResult<IEnumerable<string>> Get()
         {
